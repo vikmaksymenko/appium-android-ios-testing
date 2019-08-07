@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>appium</groupId>
+    <artifactId>android-ios-testing</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <allure.version>2.12.1</allure.version>
+        <cucumber.version>4.7.1</cucumber.version>
+        <appium.version>1.13.0</appium.version>
+        <aspectj.version>1.9.4</aspectj.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Reset App Policy -->
+        <reset.app>false</reset.app>
+        <reset.device>false</reset.device>
+
+        <!--Test App Configs -->
+        <app.branch>master</app.branch>
+        <app.path>src/test/resources/appium_testing/apps</app.path>
+
+        <!--iOS dev creds-->
+        <xcconfig.file>.xcconfig</xcconfig.file>
+
+        <!-- Test Run Configs-->
+        <skip.tests>true</skip.tests>
+        <sdk.to.test>~@ignore</sdk.to.test>
+    </properties>
+
+
+    <name>Sample Android and iOS testing</name>
+    <description>BDD test framework for running Android and iOS automation tests</description>
+
+    <build>
+        <defaultGoal>dependency:copy-dependencies</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-archetype-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -Dcucumber.options="--plugin io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm --tags ~@ignore --tags ${suite.name} --tags ${sdk.to.test} --glue appium_testing.steps.${device.platform.name} --glue appium_testing.steps.commons src/test/resources/appium_testing/features/${device.platform.name}"
+                    </argLine>
+                    <includes>
+                        <include>**/CukesRunner.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                        <allure.link.issue.pattern>https://foobar.atlassian.net/browse/{}</allure.link.issue.pattern>
+                        <device.platform.name>${device.platform.name}</device.platform.name>
+                        <device.platform.version>${device.platform.version}</device.platform.version>
+                        <device.name>${device.name}</device.name>
+                        <device.type>${device.type}</device.type>
+                        <device.udid>${device.udid}</device.udid>
+                        <provider.name>${provider.name}</provider.name>
+                        <reset.app>${reset.app}</reset.app>
+                        <reset.device>${reset.device}</reset.device>
+                        <app.branch>${app.branch}</app.branch>
+                        <app.path>${app.path}</app.path>
+                        <xcconfig.file>${xcconfig.file}</xcconfig.file>
+                        <skip.tests>${skip.tests}</skip.tests>
+                        <sdk.to.test>${sdk.to.test}</sdk.to.test>
+                    </systemPropertyVariables>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.10.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>5.2.8</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber4-jvm</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-selenide</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-attachments</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
+        <!--This is needed only for correct screenshots attachments-->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.8.0-beta4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.8.0-beta4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.lightbody.bmp</groupId>
+            <artifactId>browsermob-core</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.0-jre</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180813</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!--Suites-->
+        <profile>
+            <id>suite-full</id>
+            <properties>
+                <suite.name>~@ignore</suite.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>suite-regression</id>
+            <properties>
+                <suite.name>@regression</suite.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>suite-debug</id>
+            <properties>
+                <suite.name>@debug</suite.name>
+            </properties>
+        </profile>
+
+        <!-- Devices -->
+        <profile>
+            <id>local-denys-android-device</id>
+            <properties>
+                <provider.name>local</provider.name>
+                <device.type>device</device.type>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>5.1</device.platform.version>
+                <device.name>Y15HFBP8228WA</device.name>
+            </properties>
+        </profile>
+<!--        <profile>-->
+<!--            <id>local-ios-device</id>-->
+<!--            <properties>-->
+<!--                <provider.name>local</provider.name>-->
+<!--                <device.type>device</device.type>-->
+<!--                <device.platform.name>ios</device.platform.name>-->
+<!--                <device.platform.version>12.2</device.platform.version>-->
+<!--                <device.name>iPhone</device.name>-->
+<!--                <device.udid>d635c3deb151ae55cc4d972d9f00024a243263e6</device.udid>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--        <profile>-->
+<!--            <id>local-ios-simulator</id>-->
+<!--            <properties>-->
+<!--                <provider.name>local</provider.name>-->
+<!--                <device.type>simulator</device.type>-->
+<!--                <device.platform.name>ios</device.platform.name>-->
+<!--                <device.platform.version>12.2</device.platform.version>-->
+<!--                <device.name>iPhone 6</device.name>-->
+<!--            </properties>-->
+<!--        </profile>-->
+        <profile>
+            <id>local-android-device</id>
+            <properties>
+                <provider.name>local</provider.name>
+                <device.type>device</device.type>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>8.0.0</device.platform.version>
+                <device.name>4200da729a92641d</device.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>local-android-emulator</id>
+            <properties>
+                <provider.name>local</provider.name>
+                <device.type>emulator</device.type>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>5.1</device.platform.version>
+                <device.name>Google Nexus 5</device.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>saucelabs-android-emulator</id>
+            <properties>
+                <provider.name>saucelabs</provider.name>
+                <device.type>emulator</device.type>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>8.1</device.platform.version>
+                <device.name>Android GoogleAPI Emulator</device.name>
+                <appium.version>1.11.1</appium.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>browserstack-android-emulator</id>
+            <properties>
+                <provider.name>browserstack</provider.name>
+                <device.type>emulator</device.type>
+                <device.platform.name>ios</device.platform.name>
+                <device.platform.version>11</device.platform.version>
+                <device.name>iPhone 8 Plus</device.name>
+                <appium.version>1.13.0</appium.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>kobiton-android-emulator</id>
+            <properties>
+                <provider.name>kobiton</provider.name>
+                <device.type>emulator</device.type>
+                <device.platform.name>ios</device.platform.name>
+                <device.platform.version>10.*</device.platform.version>
+                <device.name>i*</device.name>
+                <appium.version>1.11.1</appium.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>perfecto-android-emulator</id>
+            <properties>
+                <provider.name>kobiton</provider.name>
+                <device.type>emulator</device.type>
+                <device.platform.name>ios</device.platform.name>
+                <device.platform.version>10.*</device.platform.version>
+                <device.name>i*</device.name>
+                <appium.version>1.11.1</appium.version>
+            </properties>
+        </profile>
+    </profiles>
+</project>

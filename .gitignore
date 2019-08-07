@@ -1,0 +1,7 @@
+.idea
+
+.allure
+target
+build
+
+.DS_Store

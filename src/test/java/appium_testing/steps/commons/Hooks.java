@@ -1,7 +1,6 @@
 package appium_testing.steps.commons;
 
 import appium_testing.CukesRunner;
-
 import io.appium.java_client.screenrecording.CanRecordScreen;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
@@ -44,29 +43,24 @@ public class Hooks {
         if (scenario.isFailed()) {
             if (System.getProperty("device.platform.name").equals("android")) {
                 attachDeviceLog(driver.manage().logs().get("logcat"));
+                if(System.getProperty("device.type").contains("device")
+                        || System.getProperty("device.platform.version").contains("8")
+                        || System.getProperty("device.platform.version").contains("9")) {
+                    attachScreencast();
+                }
             } else if (System.getProperty("device.platform.name").equals("ios")) {
                 attachDeviceLog(driver.manage().logs().get("syslog"));
+                attachScreencast();
             }
-            attachScreencast();
-//            AllureLifecycle.takeScreenshot("failed");
         }
     }
 
     @Attachment(value = "test_recording.mp4", type = "video/mp4")
     private byte[] attachScreencast(){
-
-        // TODO: validate the method
-
         WebDriver driver = new CukesRunner().getDriver();
-        if (System.getProperty("device.platform.name").equals("ios")
-                || System.getProperty("device.type").contains("device")
-                || System.getProperty("device.platform.version").contains("8")
-                || System.getProperty("device.platform.version").contains("9")) {
-            String video = ((CanRecordScreen) driver).stopRecordingScreen();
-            return Base64.getMimeDecoder().decode(video);
-        } else {
-            return null;
-        }
+        String video = ((CanRecordScreen) driver).stopRecordingScreen();
+        return Base64.getMimeDecoder().decode(video);
+
     }
 
     @Attachment(value = "device.log", type = "text/plain")

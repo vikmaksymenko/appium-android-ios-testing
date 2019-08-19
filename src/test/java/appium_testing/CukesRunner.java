@@ -129,15 +129,11 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
 
     private AppiumDriver initSauceLabs() throws MalformedURLException {
         /* SauceLabs Config */
-        final String USERNAME = "denys_makarenko_eu2";
-        final String ACCESS_KEY = "47451085-0d03-415b-a02e-98fd0352ad52";
+        final String USERNAME = System.getenv("USERNAME");
+        final String ACCESS_KEY = System.getenv("ACCESS_KEY");
         final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.eu-central-1.saucelabs.com:443/wd/hub";
 
         DesiredCapabilities capabilities = promoteDeviceCapabilities();
-//        capabilities.setCapability("testobjectApiKey", "0AA457691D7747F6A697910018705D64");
-
-        // Dynamic device allocation of an Android, running iOS 10.3 device
-//        capabilities.setCapability("deviceName", "Android GoogleAPI Emulator");
         capabilities.setCapability("app", "https://73228fec.ngrok.io/app-admob12-debug.apk");
         capabilities.setCapability("browserName", "");
 
@@ -153,14 +149,13 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
     }
 
     private AppiumDriver initBrowserstack() throws MalformedURLException {
-        /* SauceLabs Config */
-        final String USERNAME = "denysmakarenko1";
-        final String ACCESS_KEY = "3YzXXoPU73zkE8hUXNmK";
+        final String USERNAME = System.getenv("USERNAME");
+        final String ACCESS_KEY = System.getenv("ACCESS_KEY");
         final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@hub-cloud.browserstack.com/wd/hub";
 
         DesiredCapabilities capabilities = promoteDeviceCapabilities();
 
-        capabilities.setCapability("app", "bs://50c636114ec411650d61058d35aba8cfe0daa4f2");
+        capabilities.setCapability("app", System.getenv("APP"));
         capabilities.setCapability("device", System.getProperty("device.name"));
         capabilities.setCapability("os_version", System.getProperty("device.platform.version"));
 
@@ -176,22 +171,16 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
     }
 
     private AppiumDriver initPerfecto() throws MalformedURLException {
-        // Perfecto
-//        DesiredCapabilities capabilities = new DesiredCapabilities();
-//        capabilities.setCapability("deviceOrientation", "portrait");
-//        capabilities.setCapability("captureScreenshots", true);
-//
-//        capabilities.setCapability("user", "denys_makarenko@u-tor.com");
-//        capabilities.setCapability("password", "aGAgaSusE");
-//        capabilities.setCapability("deviceName", "CB512E4WZG");
-//        capabilities.setCapability("autoLaunch",true);
-//        capabilities.setCapability("fullReset",true);
-//        capabilities.setCapability("app","PRIVATE:appium_testing.apk");
-//        capabilities.setCapability("bundleId", "com.yoctoville.errands");
-
-        // TODO: update caps according to lines above
         DesiredCapabilities capabilities = promoteDeviceCapabilities();
+        capabilities.setCapability("deviceOrientation", "portrait");
+        capabilities.setCapability("captureScreenshots", true);
 
+        capabilities.setCapability("user", System.getenv("USERNAME"));
+        capabilities.setCapability("password", System.getenv("PASSWORD"));
+        capabilities.setCapability("deviceName", System.getProperty("device.name"));
+        capabilities.setCapability("autoLaunch",true);
+        capabilities.setCapability("fullReset",true);
+        capabilities.setCapability("app", System.getenv("APP"));
 
         String host = "mobilecloud.perfectomobile.com";
         String url = "https://" + host + "/nexperience/perfectomobile/wd/hub";
@@ -211,8 +200,9 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
     private AppiumDriver initKobiton() throws MalformedURLException {
         DesiredCapabilities capabilities = promoteDeviceCapabilities();
 
-        // TODO: update caps according to lines above
-        String kobitonServerUrl = "https://denys-makarenko:d334a7c5-3d67-498b-96ed-ae540364a38d@api.kobiton.com/wd/hub";
+        final String USERNAME = System.getenv("USERNAME");
+        final String ACCESS_KEY = System.getenv("ACCESS_KEY");
+        String kobitonServerUrl = "https://" + USERNAME + ":" + ACCESS_KEY + "@api.kobiton.com/wd/hub";
 
         // The generated session will be visible to you only.
         capabilities.setCapability("sessionName", "Automation test session");
@@ -220,7 +210,7 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
         capabilities.setCapability("deviceOrientation", "portrait");
         capabilities.setCapability("captureScreenshots", true);
 
-        capabilities.setCapability("app", "kobiton-store:32307");
+        capabilities.setCapability("app", System.getenv("APP"));
 
         if(System.getProperty("device.platform.name").equals("android")) {
             return new AndroidDriver(new URL(kobitonServerUrl), capabilities);
@@ -269,28 +259,28 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
         }
     }
 
-//    @AfterTest(alwaysRun = true)
-//    public void addAllureEnvDetails() {
-//        BufferedWriter writer = null;
-//        try {
-//            File envPropsFile = new File("target/allure-results/environment.properties");
-//            writer = new BufferedWriter(new FileWriter(envPropsFile));
-//            String env = "Provider=" + System.getProperty("provider.name") + "\n" +
-//                    "Platform.name=" + System.getProperty("device.platform.name") + "\n" +
-//                    "Platform.version=" + System.getProperty("device.platform.version") + "\n" +
-//                    "Device.type=" + System.getProperty("device.type") + "\n" +
-//                    "Device.name=" + System.getProperty("device.name") + "\n" +
-//                    "App.branch=" + System.getProperty("app.branch") + "\n";
-//            writer.write(env);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                // Close the writer regardless of what happens...
-//                writer.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    @AfterTest(alwaysRun = true)
+    public void addAllureEnvDetails() {
+        BufferedWriter writer = null;
+        try {
+            File envPropsFile = new File("target/allure-results/environment.properties");
+            writer = new BufferedWriter(new FileWriter(envPropsFile));
+            String env = "Provider=" + System.getProperty("provider.name") + "\n" +
+                    "Platform.name=" + System.getProperty("device.platform.name") + "\n" +
+                    "Platform.version=" + System.getProperty("device.platform.version") + "\n" +
+                    "Device.type=" + System.getProperty("device.type") + "\n" +
+                    "Device.name=" + System.getProperty("device.name") + "\n" +
+                    "App.branch=" + System.getProperty("app.branch") + "\n";
+            writer.write(env);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Close the writer regardless of what happens...
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

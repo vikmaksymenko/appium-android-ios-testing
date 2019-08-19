@@ -289,10 +289,9 @@
             <properties>
                 <provider.name>browserstack</provider.name>
                 <device.type>emulator</device.type>
-                <device.platform.name>ios</device.platform.name>
-                <device.platform.version>11</device.platform.version>
-                <device.name>iPhone 8 Plus</device.name>
-                <appium.version>1.13.0</appium.version>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>7.0</device.platform.version>
+                <device.name>Samsung Galaxy S8</device.name>
             </properties>
         </profile>
         <profile>
@@ -300,10 +299,9 @@
             <properties>
                 <provider.name>kobiton</provider.name>
                 <device.type>emulator</device.type>
-                <device.platform.name>ios</device.platform.name>
-                <device.platform.version>10.*</device.platform.version>
-                <device.name>i*</device.name>
-                <appium.version>1.11.1</appium.version>
+                <device.platform.name>android</device.platform.name>
+                <device.platform.version>7.0</device.platform.version>
+                <device.name>*</device.name>
             </properties>
         </profile>
         <profile>

@@ -7,14 +7,12 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
 public class StartViewSteps {
     @Given("Message {string} should be displayed")
     public void messageShouldBeDisplayed(String message) {
         $(By.id("com.example.testapp:id/helloWorld")).waitUntil(exist, 20000).should(be(visible));
         AllureLogHelper.takeScreenshot("App loaded");
-        fail("debug");
     }
 
     @Given("{int} plus {int} should be {int}")

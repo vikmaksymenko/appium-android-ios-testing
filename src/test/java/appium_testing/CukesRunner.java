@@ -259,28 +259,28 @@ public class CukesRunner extends AbstractTestNGCucumberTests {
         }
     }
 
-    @AfterTest(alwaysRun = true)
-    public void addAllureEnvDetails() {
-        BufferedWriter writer = null;
-        try {
-            File envPropsFile = new File("target/allure-results/environment.properties");
-            writer = new BufferedWriter(new FileWriter(envPropsFile));
-            String env = "Provider=" + System.getProperty("provider.name") + "\n" +
-                    "Platform.name=" + System.getProperty("device.platform.name") + "\n" +
-                    "Platform.version=" + System.getProperty("device.platform.version") + "\n" +
-                    "Device.type=" + System.getProperty("device.type") + "\n" +
-                    "Device.name=" + System.getProperty("device.name") + "\n" +
-                    "App.branch=" + System.getProperty("app.branch") + "\n";
-            writer.write(env);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // Close the writer regardless of what happens...
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @AfterTest(alwaysRun = true)
+//    public void addAllureEnvDetails() {
+//        BufferedWriter writer = null;
+//        try {
+//            File envPropsFile = new File("target/allure-results/environment.properties");
+//            writer = new BufferedWriter(new FileWriter(envPropsFile));
+//            String env = "Provider=" + System.getProperty("provider.name") + "\n" +
+//                    "Platform.name=" + System.getProperty("device.platform.name") + "\n" +
+//                    "Platform.version=" + System.getProperty("device.platform.version") + "\n" +
+//                    "Device.type=" + System.getProperty("device.type") + "\n" +
+//                    "Device.name=" + System.getProperty("device.name") + "\n" +
+//                    "App.branch=" + System.getProperty("app.branch") + "\n";
+//            writer.write(env);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                // Close the writer regardless of what happens...
+//                writer.close();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
